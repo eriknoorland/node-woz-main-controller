@@ -168,6 +168,16 @@ const mainController = (path) => {
   }
 
   /**
+   * Reset the IMU
+   */
+  function resetIMU() {
+    return new Promise((resolve) => {
+      writeToSerialPort([requestStartFlag, 0x20]);
+      setTimeout(resolve, 1000);
+    });
+  }
+
+  /**
    * Writes the given buffer to the serial port
    * @param {Array} data
    */
@@ -196,6 +206,7 @@ const mainController = (path) => {
     turn,
     drive,
     stop,
+    resetIMU,
     on: eventEmitter.on.bind(eventEmitter),
     off: eventEmitter.off.bind(eventEmitter),
   };
