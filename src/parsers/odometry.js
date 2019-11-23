@@ -1,4 +1,5 @@
-const robotlib = require('../../../../node-robotlib'); // FIXME require as node_modules dependency
+const robotlib = require('robotlib');
+
 const parseDecToBinary = robotlib.utils.math.parseDecToBinary;
 
 /**
