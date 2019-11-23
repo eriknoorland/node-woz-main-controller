@@ -1,6 +1,6 @@
 {
   "name": "woz-main-controller",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A Node module to communicate with the Arduino robot main controller (see https://github.com/eriknoorland/arduino-woz-main-controller).",
   "main": "index.js",
   "scripts": {
