@@ -104,7 +104,7 @@ const mainController = (path) => {
   function rotate(speed, angle) {
     const speedByte = robotlib.utils.math.numberToHex(speed);
     const angleByte = robotlib.utils.math.numberToHex(Math.abs(angle));
-    const directionByte = robotlib.utils.math.numberToHex(angle < 0 ? 0 : 1);
+    const directionByte = robotlib.utils.math.numberToHex(angle < 0 ? 1 : 0);
 
     writeToSerialPort([requestStartFlag, 0x12, speedByte, angleByte, directionByte]);
 
@@ -129,7 +129,7 @@ const mainController = (path) => {
     const speedByte = robotlib.utils.math.numberToHex(speed);
     const angleByte = robotlib.utils.math.numberToHex(Math.abs(angle));
     const radiusByte = robotlib.utils.math.numberToHex(radius);
-    const directionByte = robotlib.utils.math.numberToHex(angle < 0 ? 0 : 1);
+    const directionByte = robotlib.utils.math.numberToHex(angle < 0 ? 1 : 0);
 
     writeToSerialPort([requestStartFlag, 0x13, speedByte, angleByte, radiusByte, directionByte]);
 
