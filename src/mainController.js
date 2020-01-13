@@ -48,6 +48,32 @@ const mainController = (path) => {
   }
 
   /**
+   * Go to point
+   * @param {Object} currentPosition
+   * @param {Object} targetPosition
+   * @param {Number} currentHeading
+   * @return {Promise}
+   */
+  function goToPoint(currentPosition, targetPosition, currentHeading) {
+    const { x: x1, y: y1 } = currentPosition;
+    const { x: x2, y: y2 } = targetPosition;
+    const distance = Math.round(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
+    const angleRadians = Math.atan2(y2 - y1, x2 - x1);
+    const angle = Math.round(robotlib.utils.math.rad2deg(angleRadians));
+    const rotateAngle = robotlib.utils.math.getRelativeAngleDifference(angle, currentHeading);
+
+    return new Promise(async (resolve) => {
+      if (rotateAngle) {
+        await rotate(20, rotateAngle);
+      }
+
+      await forward(20, distance);
+
+      resolve();
+    });
+  }
+
+  /**
    * Forward
    * @param {Number} speed
    * @param {Number} distance
@@ -200,6 +226,7 @@ const mainController = (path) => {
 
   return {
     init,
+    goToPoint,
     forward,
     reverse,
     rotate,
