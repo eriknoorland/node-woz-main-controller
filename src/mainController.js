@@ -54,7 +54,7 @@ const mainController = (path) => {
    * @param {Number} currentHeading
    * @return {Promise}
    */
-  function goToPoint(currentPosition, targetPosition, currentHeading) {
+  function goToXY(currentPosition, targetPosition, currentHeading) {
     const { x: x1, y: y1 } = currentPosition;
     const { x: x2, y: y2 } = targetPosition;
     const distance = Math.round(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
@@ -71,6 +71,33 @@ const mainController = (path) => {
 
       resolve();
     });
+  }
+
+  /**
+   * Keep heading
+   * @param {Number} speed
+   * @param {Number} heading
+   * @param {Number} distance
+   * @return {Promise}
+   */
+  function keepHeading(speed, heading, distance = 0) {
+    const speedByte = robotlib.utils.math.numberToHex(Math.abs(speed));
+    const headingByte = robotlib.utils.math.numberToHex(heading);
+    const directionByte = robotlib.utils.math.numberToHex(speed > 0 ? 1 : 0);
+    const distanceByte = robotlib.utils.math.numberToHex(distance);
+
+    writeToSerialPort([requestStartFlag, 0x16, speedByte, headingByte, directionByte, distanceByte]);
+
+    if (distance) {
+      return new Promise((resolve) => {
+        const onTargetReached = () => {
+          parser.off('targetReached', onTargetReached);
+          resolve();
+        };
+
+        parser.on('targetReached', onTargetReached);
+      });
+    }
   }
 
   /**
@@ -226,7 +253,8 @@ const mainController = (path) => {
 
   return {
     init,
-    goToPoint,
+    goToXY,
+    keepHeading,
     forward,
     reverse,
     rotate,
