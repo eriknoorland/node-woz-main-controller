@@ -81,12 +81,12 @@ const mainController = (path) => {
    * @return {Promise}
    */
   function keepHeading(speed, heading, distance = 0) {
-    const speedByte = robotlib.utils.math.numberToHex(Math.abs(speed));
+    const speedByte = robotlib.utils.math.numberToByteArray(speed, 2);
+    const distanceByte = robotlib.utils.math.numberToByteArray(distance, 2);
     const headingByte = robotlib.utils.math.numberToHex(heading);
     const directionByte = robotlib.utils.math.numberToHex(speed > 0 ? 1 : 0);
-    const distanceByte = robotlib.utils.math.numberToHex(distance);
 
-    writeToSerialPort([requestStartFlag, 0x16, speedByte, headingByte, directionByte, distanceByte]);
+    writeToSerialPort([requestStartFlag, 0x16, ...speedByte, headingByte, directionByte, ...distanceByte]);
 
     if (distance) {
       return new Promise((resolve) => {
@@ -107,10 +107,10 @@ const mainController = (path) => {
    * @return {Promise}
    */
   function forward(speed, distance = 0) {
-    const speedByte = robotlib.utils.math.numberToHex(speed);
-    const distanceByte = robotlib.utils.math.numberToHex(distance);
+    const speedByte = robotlib.utils.math.numberToByteArray(speed, 2);
+    const distanceByte = robotlib.utils.math.numberToByteArray(distance, 2);
 
-    writeToSerialPort([requestStartFlag, 0x10, speedByte, distanceByte]);
+    writeToSerialPort([requestStartFlag, 0x10, ...speedByte, ...distanceByte]);
 
     if (distance) {
       return new Promise((resolve) => {
@@ -131,10 +131,10 @@ const mainController = (path) => {
    * @return {Promise}
    */
   function reverse(speed, distance = 0) {
-    const speedByte = robotlib.utils.math.numberToHex(speed);
-    const distanceByte = robotlib.utils.math.numberToHex(distance);
+    const speedByte = robotlib.utils.math.numberToByteArray(speed, 2);
+    const distanceByte = robotlib.utils.math.numberToByteArray(distance, 2);
 
-    writeToSerialPort([requestStartFlag, 0x11, speedByte, distanceByte]);
+    writeToSerialPort([requestStartFlag, 0x11, ...speedByte, ...distanceByte]);
 
     if (distance) {
       return new Promise((resolve) => {
@@ -155,11 +155,11 @@ const mainController = (path) => {
    * @return {Promise}
    */
   function rotate(speed, angle) {
-    const speedByte = robotlib.utils.math.numberToHex(speed);
+    const speedByte = robotlib.utils.math.numberToByteArray(speed, 2);
     const angleByte = robotlib.utils.math.numberToHex(Math.abs(angle));
     const directionByte = robotlib.utils.math.numberToHex(angle < 0 ? 1 : 0);
 
-    writeToSerialPort([requestStartFlag, 0x12, speedByte, angleByte, directionByte]);
+    writeToSerialPort([requestStartFlag, 0x12, ...speedByte, angleByte, directionByte]);
 
     return new Promise((resolve) => {
       const onTargetReached = () => {
@@ -179,12 +179,12 @@ const mainController = (path) => {
    * @return {Promise}
    */
   function turn(speed, angle, radius) {
-    const speedByte = robotlib.utils.math.numberToHex(speed);
+    const speedByte = robotlib.utils.math.numberToByteArray(speed, 2);
     const angleByte = robotlib.utils.math.numberToHex(Math.abs(angle));
     const radiusByte = robotlib.utils.math.numberToHex(radius);
     const directionByte = robotlib.utils.math.numberToHex(angle < 0 ? 1 : 0);
 
-    writeToSerialPort([requestStartFlag, 0x13, speedByte, angleByte, radiusByte, directionByte]);
+    writeToSerialPort([requestStartFlag, 0x13, ...speedByte, angleByte, radiusByte, directionByte]);
 
     return new Promise((resolve) => {
       const onTargetReached = () => {
@@ -202,10 +202,10 @@ const mainController = (path) => {
    * @param {Number} speedRight
    */
   function drive(speedLeft, speedRight) {
-    const speedLeftByte = robotlib.utils.math.numberToHex(speedLeft);
-    const speedRightByte = robotlib.utils.math.numberToHex(speedRight);
+    const speedLeftByte = robotlib.utils.math.numberToByteArray(speedLeft, 2);
+    const speedRightByte = robotlib.utils.math.numberToByteArray(speedRight, 2);
 
-    writeToSerialPort([requestStartFlag, 0x14, speedLeftByte, speedRightByte]);
+    writeToSerialPort([requestStartFlag, 0x14, ...speedLeftByte, ...speedRightByte]);
   }
 
   /**
@@ -216,7 +216,7 @@ const mainController = (path) => {
   function stop(hard = 0) {
     return new Promise((resolve) => {
       writeToSerialPort([requestStartFlag, 0x15, robotlib.utils.math.numberToHex(hard)]);
-      setTimeout(resolve, hard ? 0 : 1000);
+      setTimeout(resolve, hard ? 0 : 2000);
     });
   }
 
