@@ -34,8 +34,8 @@ class Parser extends Transform {
           const command = this.buffer[packetStart + 3];
           const dataLength = this.buffer[packetStart + 4];
 
-          if (this.buffer.length > packetStart + numDescriptorBytes + dataLength + 2) {
-            const packetEnd = packetStart + numDescriptorBytes + dataLength + 2;
+          if (this.buffer.length > packetStart + numDescriptorBytes + dataLength + 1) {
+            const packetEnd = packetStart + numDescriptorBytes + dataLength + 1;
             const packet = this.buffer.slice(packetStart, packetEnd);
             const decodedPacket = cobs.decode(packet);
             const packetData = [];
