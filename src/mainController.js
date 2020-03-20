@@ -222,12 +222,23 @@ const mainController = (path) => {
 
   /**
    * Reset the IMU
+   * @return {Promise}
    */
   function resetIMU() {
     return new Promise((resolve) => {
       writeToSerialPort([requestStartFlag, 0x20]);
-      setTimeout(resolve, 1000);
+      setTimeout(resolve, 2000);
     });
+  }
+
+  /**
+   * Ask controller for ready response
+   * @return {Promise}
+   */
+  function isReady() {
+    writeToSerialPort([requestStartFlag, 0x30]);
+
+    return Promise.resolve();
   }
 
   /**
@@ -262,6 +273,7 @@ const mainController = (path) => {
     drive,
     stop,
     resetIMU,
+    isReady,
     on: eventEmitter.on.bind(eventEmitter),
     off: eventEmitter.off.bind(eventEmitter),
   };
