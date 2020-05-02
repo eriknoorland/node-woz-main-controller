@@ -54,9 +54,7 @@ const mainController = (path) => {
    * @param {Number} currentHeading
    * @return {Promise}
    */
-  function goToXY(currentPosition, targetPosition, currentHeading) {
-    const { x: x1, y: y1 } = currentPosition;
-    const { x: x2, y: y2 } = targetPosition;
+  function goToXY({ x: x1, y: y1 }, { x: x2, y: y2 }, currentHeading) {
     const distance = Math.round(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
     const angleRadians = Math.atan2(y2 - y1, x2 - x1);
     const angle = Math.round(robotlib.utils.math.rad2deg(angleRadians));
@@ -64,10 +62,10 @@ const mainController = (path) => {
 
     return new Promise(async (resolve) => {
       if (rotateAngle) {
-        await rotate(20, rotateAngle);
+        await rotate(100, rotateAngle);
       }
 
-      await forward(20, distance);
+      await forward(250, distance);
 
       resolve();
     });
